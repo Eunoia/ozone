@@ -6,6 +6,8 @@ gem 'rails', '4.2.4'
 # Use postgresql as the database for Active Record
 gem 'pg'
 gem 'activerecord-postgis-adapter'
+gem 'rgeo-activerecord'
+gem 'rgeo'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -31,9 +33,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'polylines'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'pry'
+  gem 'awesome_print'
 end
 
 group :development do

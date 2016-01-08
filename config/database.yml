@@ -15,17 +15,18 @@
 # gem 'pg'
 #
 default: &default
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+  host: localhost
+  port: 5432
+  schema_search_path: "public,postgis"
 
 development:
   <<: *default
   database: ozone_development
-  host: localhost
-  port: 5432
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
