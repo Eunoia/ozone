@@ -7,8 +7,22 @@ Let's look at Oakland's zoning!
 ### Database
 1. Download [Postgres.app](http://postgresapp.com/)
 2. Create the database `createdb ozone_development`
-3. Run migrations `rake db:migrate`
-3. Import the shapefile into Postgres. `psql -d ozone_development -f districts.sql`
+3. Enable Postgresql `rake db:migrate`
+3. Import the zoning shapefile into Postgres. `psql -d ozone_development -f districts.sql`
+5. Download the alameda county parcel data. <https://www.acgov.org/government/geospatial.htm> (second result)
+6. install gdal for converting projections `brew install gdal`
+7. Let the commandline know where to find gdal files `export GDAL_DATA="/usr/local/Cellar/gdal/1.11.3_1/share/gdal"`
+8. Convert the Lambert conformal conic projection shapefile into WKT84 `ogr2ogr -t_srs EPSG:4326 alameda_parcels.shp Geospatial.shp`
+9 Convert the shapefile into sql
+`shp2pgsql alameda_parcels.shp parcels > parcels2.sql`
+10 Import sql containing parcels `psql -d ozone_development -f parcels.sql`
+
+## Raw Data
+Oakland Zone Boundries
+<https://data.oaklandnet.com/dataset/Zoning/q8sz-29u5>
+
+Alameda County Platmap
+<https://www.acgov.org/government/geospatial.htm>
 
 ## Questions
 
@@ -19,6 +33,43 @@ What zone takes up the most space?
 How many zones are in Oakland?
 `District.uniq("znlabel").pluck("znlabel").count`
 > 127
+
+How many parcel's are in a zoning district?
+`d = District.find(3); Parcel.where("ST_Within(geom, ST_GeometryFromText(\'#{d.geom}\'))").count`
+> 70
+
+How is land zoned near the Macarthur Bart station?
+```
+Select 
+	d.znlabel, sum(ST_Area(p.geom::geography)) as area
+from 
+	parcels p
+join
+	districts d
+on
+	ST_Contains(d.geom, p.geom)
+where 
+	ST_DWithin(
+		ST_GeomFromText('POINT(-122.267047 37.8290643)')::geography,
+		p.geom::geography, 
+		804
+	)
+group by d.znlabel
+order by area desc
+limit 3;
+```
+> code,area_in_m2
+RM-3, 74363.4426736326 
+RM-1, 97140.1256860269 
+RM-2, 365431.139645702
+
+How do I translate zoning labels like, RM-2, into words?
+> [General Planning Ordinances
+of the City of Oakland, California](http://www2.oaklandnet.com/oakca1/groups/ceda/documents/report/oak053289.pdf)
+
+How do I see all the parcels in a particalar zoning district?
+`Parcel.select("ST_AsGeoJSON(ST_Union(geom)) as shape").where("ST_Within(geom, ST_GeomFromText('#{d.geom}'))")[0].shape`
+> {"type":"MultiPolygon","coordinates":[[[[-122.270872979063,37.7979284166376],[-122.270934408146,37.7978299688127],.......
 
 What are the different zones in Oakland?
 `District.uniq("znlabel").pluck("znlabel").sort`
