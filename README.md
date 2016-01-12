@@ -13,9 +13,9 @@ Let's look at Oakland's zoning!
 6. install gdal for converting projections `brew install gdal`
 7. Let the commandline know where to find gdal files `export GDAL_DATA="/usr/local/Cellar/gdal/1.11.3_1/share/gdal"`
 8. Convert the Lambert conformal conic projection shapefile into WKT84 `ogr2ogr -t_srs EPSG:4326 alameda_parcels.shp Geospatial.shp`
-9 Convert the shapefile into sql
+9. Convert the shapefile into sql
 `shp2pgsql alameda_parcels.shp parcels > parcels2.sql`
-10 Import sql containing parcels `psql -d ozone_development -f parcels.sql`
+10. Import sql containing parcels `psql -d ozone_development -f parcels.sql`
 
 ## Raw Data
 Oakland Zone Boundries
