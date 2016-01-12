@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<style type="text/css">
+	#map { height: 400px; } .legend{ list-style: none none; }
+	.legend li.white{ color: white; }
+	.legend li{
+		display: inline;padding: 3px 3px 3px 3px;
+	}
+</style>
+<h1>Parcels around MacArthur Station</h1>
+<ul class="legend">
+	<li style="background-color:#88CC88">RM-1</li>
+	<li style="background-color:#55AA55">RM-2</li>
+	<li class="white" style="background-color:#116611">RM-3</li>
+	<li class="white" style="background-color:#004400">RM-3/C</li>
+	<li style="background-color:#669999">RM-4</li>
+	<li style="background-color:#407F7F">RU-1</li>
+	<li class="white" style="background-color:#226666">RU-3</li>
+	<li class="white" style="background-color:#0D4D4D">RU-4</li>
+	<li class="white" style="background-color:#003333">RU-5</li>
+	<li class="white" style="background-color:#13073A">CC-2</li>
+	<li style="background-color:#FFAAAA">CN-2</li>
+	<li style="background-color:#D46A6A">CN-3</li>
+	<li style="background-color:#AA3939">CN-3/D-KP-1</li>
+	<li class="white" style="background-color:#801515">D-KP-4</li>
+	<li style="background-color:#FFDB58">S-1</li>
+	<li style="background-color:#FFC900">S-15</li>
+</ul>
+<div id="map"></div>
+
+<script type="text/javascript">
+	maca_bart = "-122.267047 37.8290643"
+	// var map = L.map('map').setView([-122.267047, 37.8290643], 13);
+	var map = L.map('map').setView([37.8290643, -122.267047], 13);
+	L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+    maxZoom: 18
+	}).addTo(map);
+	L.geoJson(<%= raw @geo_json %>,  {
+    style: function(feature) {
+        switch (feature.properties.znlabel) {
+						case 'RM-1': return {color: '#88CC88' };
+						case 'RM-2': return {color: '#55AA55'};
+						case 'RM-3': return {color: '#116611'};
+						case 'RM-3/C': return {color: '#004400'};
+
+						case 'RM-4': return {color: '#669999'};
+						case 'RU-1': return {color: '#407F7F'};
+						case 'RU-3': return {color: '#226666'};
+						case 'RU-4': return {color: '#0D4D4D'};
+						case 'RU-5': return {color: '#003333'};
+						case 'CC-2': return { color: '#13073A'};
+						case 'CN-2': return { color: '#FFAAAA'};
+						case 'CN-3': return { color: '#D46A6A'};
+						case 'CN-3/D-KP-1': return { color: '#AA3939'};
+						case 'D-KP-4': return { color: '#801515'};
+						case 'S-1': return { color: '#FFDB58'};
+						case 'S-15': return { color: '#FFC900'};
+        }
+    }
+}).addTo(map);
+</script>
