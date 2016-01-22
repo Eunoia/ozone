@@ -10,12 +10,16 @@ Let's look at Oakland's zoning!
 3. Enable Postgresql `rake db:migrate`
 3. Import the zoning shapefile into Postgres. `psql -d ozone_development -f districts.sql`
 5. Download the alameda county parcel data. <https://www.acgov.org/government/geospatial.htm> (second result)
-6. install gdal for converting projections `brew install gdal`
+6. Install gdal for converting projections `brew install gdal`
 7. Let the commandline know where to find gdal files `export GDAL_DATA="/usr/local/Cellar/gdal/1.11.3_1/share/gdal"`
 8. Convert the Lambert conformal conic projection shapefile into WKT84 `ogr2ogr -t_srs EPSG:4326 alameda_parcels.shp Geospatial.shp`
 9. Convert the shapefile into sql
 `shp2pgsql alameda_parcels.shp parcels > parcels2.sql`
 10. Import sql containing parcels `psql -d ozone_development -f parcels.sql`
+11. Unzip Bart Stations `unzip BART_Sta_13.zip`
+12. Convert bart shape file file into sql `shp2pgsql BART_Sta_13.shp stations > bart.sql`
+13. Import SQL `psql -d ozone_development -f bart.sql`
+
 
 ## Raw Data
 Oakland Zone Boundries
@@ -23,6 +27,9 @@ Oakland Zone Boundries
 
 Alameda County Platmap
 <https://www.acgov.org/government/geospatial.htm>
+
+Bart Stations
+<http://www.dot.ca.gov/hq/tsip/gis/datalibrary/Metadata/BART_13.html>
 
 ## Questions
 
@@ -40,18 +47,18 @@ How many parcel's are in a zoning district?
 
 How is land zoned near the Macarthur Bart station?
 ```
-Select 
+Select
 	d.znlabel, sum(ST_Area(p.geom::geography)) as area
-from 
+from
 	parcels p
 join
 	districts d
 on
 	ST_Contains(d.geom, p.geom)
-where 
+where
 	ST_DWithin(
 		ST_GeomFromText('POINT(-122.267047 37.8290643)')::geography,
-		p.geom::geography, 
+		p.geom::geography,
 		804
 	)
 group by d.znlabel
@@ -59,8 +66,8 @@ order by area desc
 limit 3;
 ```
 > code,area_in_m2
-RM-3, 74363.4426736326 
-RM-1, 97140.1256860269 
+RM-3, 74363.4426736326
+RM-1, 97140.1256860269
 RM-2, 365431.139645702
 
 How do I translate zoning labels like, RM-2, into words?
