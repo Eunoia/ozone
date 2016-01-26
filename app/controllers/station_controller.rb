@@ -1,5 +1,5 @@
-class PointController < ApplicationController
-  def index
+class StationController < ApplicationController
+  def show
   	sql =<<SQL
 		  	SELECT row_to_json(fc)
 				 FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
@@ -16,10 +16,12 @@ class PointController < ApplicationController
 					ST_DWithin(p.geom::geography, ST_GeomFromText('POINT(-122.267047 37.8290643)')::geography, 804) ) As f )  As fc;
 
 SQL
+		puts @sql
+		@sql = sql
 		@x = ActiveRecord::Base.connection.execute(sql)
 		@geo_json = @x.values[0][0].gsub('\"', '"')
   end
 
-  def show
+  def index
   end
 end

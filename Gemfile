@@ -39,6 +39,7 @@ group :development, :test do
   gem 'byebug'
   gem 'pry'
   gem 'awesome_print'
+  gem 'quiet_assets'
 end
 
 group :development do
