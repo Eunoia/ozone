@@ -17,7 +17,7 @@ Let's look at Oakland's zoning!
 `shp2pgsql alameda_parcels.shp parcels > parcels2.sql`
 10. Import sql containing parcels `psql -d ozone_development -f parcels.sql`
 11. Unzip Bart Stations `unzip BART_Sta_13.zip`
-12. Convert bart shape file file into sql `shp2pgsql BART_Sta_13.shp stations > bart.sql`
+12. Convert bart shapefile into sql `shp2pgsql BART_Sta_13.shp stations > bart.sql`
 13. Import SQL `psql -d ozone_development -f bart.sql`
 
 
