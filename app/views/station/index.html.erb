@@ -1,0 +1,3 @@
+<% @stations.each do |station| %>
+	<a href="<%= station_path(station.gid)%>"><%= station.name %></a><br>
+<% end %>
