@@ -1,5 +1,6 @@
 class StationController < ApplicationController
   def show
+  	@station = Station.find(params[:id])
   	sql =<<SQL
 		  	SELECT row_to_json(fc)
 				 FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
@@ -13,7 +14,7 @@ class StationController < ApplicationController
 				ON
 					ST_Contains(d.geom, p.geom)
 				WHERE
-					ST_DWithin(p.geom::geography, ST_GeomFromText('POINT(-122.267047 37.8290643)')::geography, 804) ) As f )  As fc;
+					ST_DWithin(p.geom::geography, #{@station.as_point}::geography, 804) ) As f )  As fc;
 
 SQL
 		puts @sql
@@ -23,5 +24,6 @@ SQL
   end
 
   def index
+  	@stations = Station.where(gid: 4..11)
   end
 end
