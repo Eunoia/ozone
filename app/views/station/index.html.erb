@@ -1,3 +1,5 @@
 <% @stations.each do |station| %>
+	<img src="<%= static_map(station.as_latlng) %>" alt="Map of <%= station.name %>" />
 	<a href="<%= station_path(station.gid)%>"><%= station.name %></a><br>
+	<hr>
 <% end %>
