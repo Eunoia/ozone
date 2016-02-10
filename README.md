@@ -45,6 +45,19 @@ How many parcel's are in a zoning district?
 `d = District.find(3); Parcel.where("ST_Within(geom, ST_GeometryFromText(\'#{d.geom}\'))").count`
 > 70
 
+How is a parcel zoned?
+```
+SELECT
+	d.znlabel
+FROM
+	districts d
+WHERE
+	ST_Contains(
+		d.geom,
+		ST_GeomFromText('POINT(-122.267047 37.8290643)')
+	)
+```
+
 How is land zoned near the Macarthur Bart station?
 ```
 Select
