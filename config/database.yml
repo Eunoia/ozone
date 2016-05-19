@@ -83,6 +83,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'].sub(/^postgres/, "postgis") %>
   database: ozone_production
   username: ozone
   password: <%= ENV['OZONE_DATABASE_PASSWORD'] %>
