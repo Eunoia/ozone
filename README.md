@@ -7,18 +7,19 @@ Let's look at Oakland's zoning!
 ### Database
 1. Download [Postgres.app](http://postgresapp.com/)
 2. Create the database `createdb ozone_development`
-3. Enable Postgresql `rake db:migrate`
+3. Enable Postgis `rake db:migrate`
 3. Import the zoning shapefile into Postgres. `psql -d ozone_development -f districts.sql`
-5. Download the alameda county parcel data. <https://www.acgov.org/government/geospatial.htm> (second result)
+5. Download the alameda county parcel data. <https://data.acgov.org/api/geospatial/2m43-xsic?method=export&format=Original>
 6. Install gdal for converting projections `brew install gdal`
 7. Let the commandline know where to find gdal files `export GDAL_DATA="/usr/local/Cellar/gdal/1.11.3_1/share/gdal"`
 8. Convert the Lambert conformal conic projection shapefile into WKT84 `ogr2ogr -t_srs EPSG:4326 alameda_parcels.shp Geospatial.shp`
 9. Convert the shapefile into sql
 `shp2pgsql alameda_parcels.shp parcels > parcels2.sql`
-10. Import sql containing parcels `psql -d ozone_development -f parcels.sql`
+10. Import sql containing parcels `psql -d ozone_development -f parcels2.sql`
 11. Unzip Bart Stations `unzip BART_Sta_13.zip`
 12. Convert bart shapefile into sql `shp2pgsql BART_Sta_13.shp stations > bart.sql`
 13. Import SQL `psql -d ozone_development -f bart.sql`
+14. Run the migrations to add indexes `rake db:migrate`
 
 
 ## Raw Data
