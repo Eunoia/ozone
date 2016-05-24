@@ -6,7 +6,7 @@ class StationController < ApplicationController
 				 FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
 				 FROM (SELECT 'Feature' As type
 				    , ST_AsGeoJSON(p.geom)::json As geometry
-				    , row_to_json((SELECT l FROM (SELECT d.znlabel) As l
+				    , row_to_json((SELECT l FROM (SELECT d.znlabel, p.gid) As l
 				      )) As properties
 				   FROM parcels p
 				LEFT JOIN

@@ -35,6 +35,7 @@
     maxZoom: 18
 	}).addTo(map);
 	L.geoJson(<%= raw @geo_json %>,  {
+		onEachFeature: onEachFeature,
     style: function(feature) {
         switch (feature.properties.znlabel) {
 						case 'RM-1': return {color: '#88CC88' };
@@ -57,4 +58,11 @@
         }
     }
 }).addTo(map);
+	function onEachFeature(feature, layer) {
+    if (feature.properties) {
+    		str = feature.properties.znlabel + '  <a href="/parcel/' + feature.properties.gid + '">Parcel Details</a>'
+        layer.bindPopup(str);
+    }
+}
+
 </script>
