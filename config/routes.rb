@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'parcel/:id' => 'parcel#show', as: :parcel
   root 'station#index'
   get 'stations' => 'station#index'
   get 'stations/:id' => 'station#show', as: :station

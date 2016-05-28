@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<style type="text/css">#map { height: 400px; } </style>
+<div id="map"></div>
+
+<b>Zone as raw: </b><%= @parcel.zone %>
+<br>
+<b>parcel as json: </b><%= @parcel.to_json %>
+<br>
+
+<script type="text/javascript">
+	var map = L.map('map').setView([<%= @parcel.center_as_latlng %>], 16);
+	L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+    maxZoom: 18
+	}).addTo(map);
+
+	L.geoJson(<%= raw @parcel.as_geojson %>).addTo(map);
+
+	<% if !@parcel.zone[0].nil? %>
+		L.geoJson(<%= raw District.find(@parcel.zone[0][0].to_i).as_geojson %>).addTo(map);
+	<% end %>
+
+</script>
+
+<a href="/district/470">Telegraph in Temescal</a>
+<a href="/district/466">Longfellow core</a>
+<a href="/district/653">Chinatown</a>
